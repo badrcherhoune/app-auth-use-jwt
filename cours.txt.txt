@@ -1,0 +1,83 @@
+🔐 Sécurité dans Angular — Guide pratique
+1. 🎯 Introduction
+J’ai créé un projet Angular avec la commande suivante :
+
+ng new app-Angular
+Ensuite, j’ai mis en place une configuration de sécurité complète en suivant les étapes ci-dessous.
+
+2. 📦 Installation du module de sécurité
+J’ai installé un module permettant de gérer l’authentification basée sur JWT (JSON Web Token) :
+
+npm install @auth0/angular-jwt
+✅ Alternative : angular-oauth2-oidc si tu utilises OAuth2/OpenID Connect.
+
+3. 🛠️ Création du service d’authentification
+Génération du service :
+
+bash
+Copier
+Modifier
+ng generate service auth
+Le service AuthService contient les responsabilités suivantes :
+
+🔑 Connexion (login)
+Envoie d’une requête HTTP POST avec les identifiants de l’utilisateur vers l’API.
+
+Récupération du token JWT en cas de succès.
+
+Stockage sécurisé du token dans le localStorage.
+
+🔓 Déconnexion (logout)
+Suppression du token du localStorage.
+
+Redirection automatique vers la page de connexion.
+
+🔍 Vérification d'authentification
+Méthode isAuthenticated() qui vérifie la présence et la validité du token.
+
+👤 Récupération des infos utilisateur
+Décodage du token JWT pour obtenir des données comme le nom, l’e-mail ou les rôles.
+
+🔄 Gestion automatique du token
+Le service est conçu pour fonctionner avec un intercepteur HTTP, qui injecte automatiquement le token dans toutes les requêtes sécurisées.
+
+4. 🧩 Mise en place d’un intercepteur HTTP
+Génération de l’intercepteur :
+
+ng generate interceptor auth
+Rôle de l’intercepteur :
+
+Intercepter toutes les requêtes sortantes.
+
+Ajouter automatiquement l’en-tête Authorization: Bearer <token> si l’utilisateur est connecté.
+
+Agit comme un filtre central de sécurité entre Angular et l’API.
+
+5. 🔐 Protection des routes avec canActivate
+Utilisation du guard canActivate pour sécuriser certaines routes (ex : dashboard, profil...) en vérifiant que l’utilisateur est authentifié.
+
+{
+  path: 'profile',
+  component: ProfileComponent,
+  canActivate: [AuthGuard]
+}
+6. 🧪 API de test utilisée
+J’ai utilisé l’API de test suivante pour valider l’implémentation :
+
+ruby
+
+https://fakeapi.platzi.com/en/rest/auth-jwt/
+Elle permet d’effectuer des tests de login et de récupération de profil utilisateur via JWT.
+
+✅ Résultat
+À la fin de cette configuration :
+
+L’utilisateur peut se connecter et recevoir un token JWT.
+
+Le token est stocké en local.
+
+Les requêtes HTTP vers l’API sont automatiquement sécurisées.
+
+Les routes sensibles sont protégées.
+
+L’interface s’adapte dynamiquement selon l’état de connexion.
